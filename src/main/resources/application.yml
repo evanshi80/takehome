@@ -3,7 +3,7 @@ spring:
     name: "takehome"
 logging:
   level:
-    root: INFO
+    root: WARN
 
 rate:
   limit:

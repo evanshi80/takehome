@@ -21,9 +21,9 @@ the expected output is:
 ```
 
 ### Build & Deploy
-1. Build the project using './gradlew build'
+1. Build the project using 'gradle build'
 ```
-   ./gradlew build
+   gradle build
 ```
 2. Create docker image using 'docker build -t evanshi80/takehome .'
 ```
