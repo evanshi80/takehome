@@ -10,14 +10,14 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 /**
-* Created by Yufan Shi
-* Response object to hold structured data with other countries in the
-* same continent as requested country codes(if they are in the same continents).
+ * Created by Yufan Shi
+ * Response object to hold structured data with other countries in the
+ * same continent as requested country codes(if they are in the same continents).
  **/
 @Getter
 @Setter
 @ToString
-public class Response {
+public class OtherCountriesResponse {
     // Represent the requested country codes by the user.
     private List<String> countryCodes = new ArrayList<>();
     private String continentName;

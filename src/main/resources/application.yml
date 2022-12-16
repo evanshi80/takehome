@@ -1,3 +1,11 @@
 spring:
   application:
     name: "takehome"
+logging:
+  level:
+    root: INFO
+
+rate:
+  limit:
+    unauthenticated: 1
+    authenticated: 10

@@ -1,6 +1,6 @@
 package com.example.takehome.controller;
 
-import com.example.takehome.domain.Response;
+import com.example.takehome.domain.OtherCountriesResponse;
 import com.example.takehome.service.CountryDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,7 +21,7 @@ public class DefaultRestController {
     }
 
     @PostMapping("find_other_countries")
-    public Collection<Response> findOtherCountries(@RequestBody List<String> countryCodes) {
+    public Collection<OtherCountriesResponse> findOtherCountries(@RequestBody List<String> countryCodes) {
         return countryDataService.findOtherCountries(countryCodes);
     }
- }
+}
