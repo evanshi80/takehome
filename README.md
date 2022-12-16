@@ -20,17 +20,57 @@ the expected output is:
 }
 ```
 
-### Notes
-1. Use the attached file as a starting point.
-2. In order to prepare this app for deployment to production, please update the Spring Boot version to the latest version.
-3. To reduce the amount of logs, please update the app so that only logs with a warning level or above are logged to the console.
-4. Finally, create a Dockerfile that would build this app into an image that is ready to be ran.
-5. Create and include a README with instructions on how to build and run this app.
-
 ### Build & Deploy
-
+1. Build the project using './gradlew build'
+```
+   ./gradlew build
+```
+2. Create docker image using 'docker build -t evanshi80/takehome .'
+```
+   docker build -t evanshi80/takehome .
+```
+3. Run the docker image using 'docker run -p 8080:8080 evanshi80/takehome'
+```
+   docker run -p 8080:8080 evanshi80/takehome 
+```
+4. the app is running on localhost:8080
 
 ### How to use
-
+1. Use Postman to send a POST request to http://localhost:8080/find_other_countries with a JSON body containing a list of country codes
+```
+["US","CA","CN","Z11W"]
+```
+2. The response will be a JSON body containing a list of country codes that are in the same continent as the country code input. Different continents will be clustered in different groups.
+```
+[
+   {
+       "countryCodes": [
+           "CN"
+       ],
+       "continentName": "Asia",
+       "otherCountryCodes": [
+           "AE",
+           "AF",
+       ...]
+   },
+   {
+       "countryCodes": [
+           "US",
+           "CA"
+       ],
+       "continentName": "North America",
+       "otherCountryCodes": [
+           "AG",
+           "AI",
+           "AW",
+        ...]
+   }
+]
+ ```
+3. If one of the country codes is invalid, that code will be ignored.
+4. If all the country codes are invalid, the response will be a JSON body containing an empty list
+5. If the request is sent more than 5 times in 1 second, a 429 Too Many Requests response will be returned
+6. To mock an authenticated user, add request header key "Authorization" and any non-empty value before sending the request
+7. Then you can send up to 20 requests in 1 second
 
 

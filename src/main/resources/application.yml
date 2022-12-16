@@ -7,5 +7,5 @@ logging:
 
 rate:
   limit:
-    unauthenticated: 1
+    unauthenticated: 5
     authenticated: 10
