@@ -2,9 +2,7 @@ package com.example.takehome.bootstrap;
 
 import com.example.takehome.domain.Country;
 import com.example.takehome.service.BasicCountryDataService;
-import com.example.takehome.service.CountryDataService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.graphql.client.HttpGraphQlClient;
 import org.springframework.stereotype.Component;
@@ -20,15 +18,10 @@ import java.util.List;
  */
 @Component
 @Slf4j
-public class BootStrapData implements CommandLineRunner {
+public class BootstrapDataCLR implements CommandLineRunner {
 
-    private final HttpGraphQlClient httpGraphQlClient =
-            HttpGraphQlClient.builder().build();
+    private final HttpGraphQlClient httpGraphQlClient = HttpGraphQlClient.builder().build();
 
-    @Autowired
-    private CountryDataService countryDataService;
-
-    @Override
     public void run(String... args) throws Exception {
         // Create a GraphQL query to retrieve all countries
         String httpRequestDocument = """

@@ -36,24 +36,27 @@ the expected output is:
 4. the app is running on localhost:8080
 
 ### How to use
-1. Use Postman to send a POST request to http://localhost:8080/find_other_countries with a JSON body containing a list of country codes
+1. Use Postman to send a POST request to http://localhost:8080/findOtherCountries with a JSON body containing a list of 
+   country 
+   codes
 ```
 ["US","CA","CN","Z11W"]
 ```
-2. The response will be a JSON body containing a list of country codes that are in the same continent as the country code input. Different continents will be clustered in different groups.
+2. The response will be a JSON body containing a list of JSON Objects. Different continents will be clustered in different groups.
 ```
 [
-   {
-       "countryCodes": [
+   { // each continent is a group
+       "countryCodes": [ // this represents the requested country codes grouped by continent
            "CN"
        ],
-       "continentName": "Asia",
-       "otherCountryCodes": [
+       "continentName": "Asia", // this represents the continent name
+       "otherCountryCodes": [ // this represents the other country codes found in the same continent,
+                                // excluding the requested country codes
            "AE",
            "AF",
        ...]
    },
-   {
+   { // this is another group of the continent "North America"
        "countryCodes": [
            "US",
            "CA"

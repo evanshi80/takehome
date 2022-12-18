@@ -31,6 +31,9 @@ public class BasicCountryDataService implements CountryDataService {
     // It accepts a list of countries, which is from one remote service or local file
     // in this case, it is from a GraphQL endpoint.
     public static void initializeCache(List<Country> countries) {
+        countriesCache.clear();;
+        continentCountriesCache.clear();
+
         for (Country country : countries) {
             // First, cache country data with the country code.
             countriesCache.put(country.getCode(), country);
