@@ -23,7 +23,7 @@ the expected output is:
 ### Build & Deploy
 1. Build the project using 'gradle build'
 ```
-   gradle build
+   ./gradlew build
 ```
 2. Create docker image using 'docker build -t evanshi80/takehome .'
 ```
@@ -31,7 +31,7 @@ the expected output is:
 ```
 3. Run the docker image using 'docker run -p 8080:8080 evanshi80/takehome'
 ```
-   docker run -p 8080:8080 evanshi80/takehome 
+   docker run -d -p 8080:8080 evanshi80/takehome 
 ```
 4. the app is running on localhost:8080
 

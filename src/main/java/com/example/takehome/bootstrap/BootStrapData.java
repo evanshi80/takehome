@@ -1,6 +1,7 @@
 package com.example.takehome.bootstrap;
 
 import com.example.takehome.domain.Country;
+import com.example.takehome.service.BasicCountryDataService;
 import com.example.takehome.service.CountryDataService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,7 @@ import java.util.List;
 /**
  * Created by Yufan Shi
  * Do bootstrap data preparation
- * Pop up caches of countries and continents by invoking
+ * initializes caches of countries and continents by invoking
  * GraphQL endpoint https://countries.trevorblades.com/graphql to retrieve countries and continents
  * to speed up queries
  */
@@ -53,7 +54,7 @@ public class BootStrapData implements CommandLineRunner {
                     .toEntityList(Country.class)
                     .block();
             // Initialize the cache
-            CountryDataService.initializeCache(countries);
+            BasicCountryDataService.initializeCache(countries);
         } catch (Exception e) {
             // Upon any exception, log the error and exit the application
             log.error("Error occurred when retrieving countries from GraphQL endpoint", e);
