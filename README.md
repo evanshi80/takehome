@@ -1,24 +1,22 @@
 ### About This Project
-Design and implement a production-ready REST API that accepts a list of country codes and returns a list of country codes that are in the same continent as the country code input.
+Takehome is a production-ready REST API that accepts a list of country codes and returns a list of country codes that 
+are in the same continent as the country code input.
 
-Use the endpoint at https://countries.trevorblades.com/graphql to get the up-to-date data required for you to implement your API.
+To keep the data of countries and continents up to date, it's sourced from the [GraphQL Countries API]
+(https://countries.trevorblades.com/graphql) and cached when the application starts. In further updates, we can implement
+a scheduled job to update the cache periodically.
 
-[Bonus Task] In order to not overwhelm the server, add a rate limit of 5 requests per sec for unauthenticated users and 20 requests per second for authenticated users. You may use Docker to include and integrate any containers that you might need for this.
+In order to not overwhelm the server, this Takehome Project integrates with the Spring Security OAuth2 and JWT framework
+to provide a secured REST API with limits depends on the user's authentication status.
 
-List any assumptions that you make.
-
-e.g. for input with "CA" and "US",
-
-the expected output is:
+A rate limit of 5 requests per sec for unauthenticated users and 20 requests per second for authenticated users. 
 ```
-{
-  continent: [{
-    countries: ["CA", "US"],
-    name: "North America",
-    otherCountries: ["AG", "AI", "AW", "BB", ...] // should not have CA or US here
-  }]
-}
+Google Guava RateLimiter is used to implement the rate limiting. There is possibility to exceed the rate limit 
+by a few requests.
+In further updates, we can implement a more accurate rate limiting by rewrite the RateLimitingFilter.
 ```
+
+In addition, you may use Docker to containerize this API.
 
 ### Build & Deploy
 1. Build the project using 'gradle build'
