@@ -36,6 +36,7 @@ the expected output is:
 4. the app is running on localhost:8080
 
 ### How to use
+
 1. Use Postman to send a POST request to http://localhost:8080/findOtherCountries with a JSON body containing a list of 
    country 
    codes
@@ -72,8 +73,24 @@ the expected output is:
  ```
 3. If one of the country codes is invalid, that code will be ignored.
 4. If all the country codes are invalid, the response will be a JSON body containing an empty list
-5. If the request is sent more than 5 times in 1 second, a 429 Too Many Requests response will be returned
-6. To mock an authenticated user, add request header key "Authorization" and any non-empty value before sending the request
-7. Then you can send up to 20 requests in 1 second
 
 
+#### Test against the rate limits
+1. Use PostMan Collection's Run feature to run the test cases,create a collection 'Takehome API test'
+2. Drag the above Http Request test into this collection
+3. Set the runner to run the collection 10 times without delay
+4. Run the collection
+5. '429 Too Many Requests responses' will be returned on those requests that exceed the rate limit 5
+6. Fetch the token from the Auth0 Aurthorization Server
+```
+curl --request POST \
+  --url https://dev-ousg77uz1ajb0gz0.us.auth0.com/oauth/token \
+  --header 'content-type: application/json' \
+  --data '{"client_id":"AL54SE9RglWZdLUJ9hNNBqU3UJLUQ1NQ","client_secret":"LQNaSty9bSBMV0LMwsxtZcoIyNO2rmmbLWV_BLvT47uWKpJ-GevrgQgec-ZAs4NW","audience":"https://takehome.yfs/api/","grant_type":"client_credentials"}'
+
+```
+7. Set the Authorization property in HTTP Request to use OAuth 2 and select the option 'add auth data to Request Headers'
+8. In the Access Token field, paste the token from the response of the step 6
+9. Make sure the header prefix is set to Bearer
+10. Run the collection again
+11. You will see the requests are all successful with 200 OK responses
