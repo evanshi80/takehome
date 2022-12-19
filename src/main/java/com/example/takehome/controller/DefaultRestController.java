@@ -2,6 +2,7 @@ package com.example.takehome.controller;
 
 import com.example.takehome.domain.OtherCountriesResponse;
 import com.example.takehome.service.CountryDataService;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
