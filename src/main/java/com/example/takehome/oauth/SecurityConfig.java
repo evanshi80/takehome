@@ -2,12 +2,12 @@ package com.example.takehome.oauth;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
 import org.springframework.security.oauth2.core.OAuth2TokenValidator;
 import org.springframework.security.oauth2.jwt.*;
-import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
@@ -29,24 +29,39 @@ public class SecurityConfig {
     private int authenticatedRequestsPerSecond;
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain apiFilterChain(HttpSecurity http) throws Exception {
         /*
         This is where we configure the security required for our endpoints and setup our app to serve as
         an OAuth2 Resource Server, using JWT validation.
         */
         http.csrf().disable();
-        http.addFilterAfter(
-                new RateLimitingFilter(authenticatedRequestsPerSecond,
-                        unauthenticatedRequestsPerSecond), BearerTokenAuthenticationFilter.class);
-        http
+        http.antMatcher("/findOtherCountries")
                 .authorizeRequests()
-                .antMatchers("/findOtherCountries").permitAll()
-                .and().cors()
-                .and().oauth2ResourceServer().jwt();
+                .anyRequest().permitAll()
+                .and().addFilterAfter(new RateLimitingFilter(authenticatedRequestsPerSecond, unauthenticatedRequestsPerSecond),
+                        BasicAuthenticationFilter.class)
+                .oauth2ResourceServer()
+                .jwt();
 
          return http.build();
     }
 
+    @Bean
+    public SecurityFilterChain actuatorFilterChain(HttpSecurity http) throws Exception {
+        // This is where we configure the security required for our actuator endpoints.
+        // We want to allow access to the actuator endpoints only from
+        /// the authenticated users
+        // TODO: we could update below code to allow access to the actuator endpoints only from centain roles
+        http.csrf().disable();
+        http
+                .requestMatcher(EndpointRequest.toAnyEndpoint())
+                .authorizeRequests()
+                .anyRequest()
+                .authenticated()
+                .and().cors()
+                .and().oauth2ResourceServer().jwt();
+        return http.build();
+    }
     @Bean
     JwtDecoder jwtDecoder() {
         /*
