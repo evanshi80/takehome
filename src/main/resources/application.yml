@@ -1,12 +1,11 @@
 management:
   endpoints:
     web:
-      base-path: /actuator
       exposure:
-          include: "*"
+          include: "info,health,metrics"
 
 server:
-  port: 8090
+  port: 8080
 spring:
   application:
     name: "takehome"

@@ -92,3 +92,18 @@ curl --request POST \
 9. Make sure the header prefix is set to Bearer
 10. Run the collection again
 11. You will see the requests are all successful with 200 OK responses
+
+### Actuator APIs
+1. You could also use the Actuator APIs to monitor the application
+2. The Actuator APIs are secured by Spring Security OAuth2 and JWT framework
+3. You need to send bearer token to access the Actuator APIs within the Authorization header
+4. The bearer token is the same as the one used to access the Takehome API
+5. The Actuator APIs are available at http://localhost:8080/actuator
+6. Only the following APIs are available
+```
+    /actuator/health
+    /actuator/info
+    /actuator/metrics
+    /actuator/metrics/{requiredMetricName}
+```
+7. BTW, the Actuator APIs are not rate limited. 
