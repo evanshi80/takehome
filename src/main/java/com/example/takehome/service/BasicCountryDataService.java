@@ -34,6 +34,7 @@ public class BasicCountryDataService implements CountryDataService {
         countriesCache.clear();;
         continentCountriesCache.clear();
 
+        //
         for (Country country : countries) {
             // First, cache country data with the country code.
             countriesCache.put(country.getCode(), country);
@@ -65,46 +66,42 @@ public class BasicCountryDataService implements CountryDataService {
         Map<String, OtherCountriesResponse> result = new HashMap<>();
         log.debug("Received country codes: {}", countryCodes);
         // Loop through the requested country codes
-        for (String countryCode : countryCodes) {
-            log.debug("Processing country code: {}", countryCode);
-            // Get the country data from the cache
-            Country country = countriesCache.get(countryCode);
-            if (country == null) {
-                // If the country code is not in the cache, skip it
-                // [Note] In this case, we can throw an exception to notify the user
-                // that the country code is not valid.
-                // But in this case, we just skip it.
-                // Because the country code is not valid, it will not be included in the response.
-                // We also could add a new field in the response to indicate the country code is invalid.
-                // All depends on the business requirements.
-                log.info("The country code {} is not valid.", countryCode);
-                continue;
-            }
+        countryCodes.forEach(
+                countryCode -> {
+                    // Get the country object from the cache
+                    Country country = countriesCache.get(countryCode);
+                    if (country == null) {
+                        log.warn("Country code {} is not found", countryCode);
+                        return;
+                    }
+                    // Get the continent code from the country object
+                    String continentCode = country.getContinent().getCode();
+                    // Get the OtherCountriesResponse object from the map
+                    OtherCountriesResponse otherCountriesResponse = result.get(continentCode);
+                    if (otherCountriesResponse == null) {
+                        // If the OtherCountriesResponse object is not found in the map,
+                        // create a new one and put it into the map
+                        otherCountriesResponse = new OtherCountriesResponse();
+                        otherCountriesResponse.setContinentName(country.getContinent().getName());
+                        result.put(continentCode, otherCountriesResponse);
+                    }
+                    // Add the country code to the OtherCountriesResponse object
+                    otherCountriesResponse.getCountryCodes().add(countryCode);
 
-            String continentCode = country.getContinent().getCode();
+                    // Fetch all the countries in the same continent from the cache
+                    // and add them into the  sorted set of other countries
+                    // If the country code is already in the sorted set, it will be ignored.
+                    // The sorted set will not have duplications and sorted by default.
+                    List<Country> otherCountries = continentCountriesCache.get(continentCode);
+                    SortedSet<String> otherCountryCodes = otherCountriesResponse.getOtherCountryCodes();
+                    otherCountries.stream()
+                            .filter(c -> !c.getCode().equals(countryCode))
+                            .forEach(c -> otherCountryCodes.add(c.getName()));
 
-            // Get the other countries in the same continent from the temporary result hashmap
-            // If the continent code is not in the result hashmap, create a new OtherCountriesResponse object
-            // and put it into the result hashmap
-            OtherCountriesResponse otherCountriesResponse = result.containsKey(continentCode) ?
-                    result.get(continentCode) : new OtherCountriesResponse();
-            otherCountriesResponse.getCountryCodes().add(countryCode);
-            otherCountriesResponse.setContinentName(country.getContinent().getName());
+                    result.put(continentCode, otherCountriesResponse);
+                }
+        );
 
-            // Fetch all the countries in the same continent from the cache
-            // and add them into the  sorted set of other countries
-            // If the country code is already in the sorted set, it will be ignored.
-            // The sorted set will not have duplications and sorted by default.
-            List<Country> otherCountries = continentCountriesCache.get(continentCode);
-            SortedSet<String> otherCountryCodes = otherCountriesResponse.getOtherCountryCodes();
-            for (Country otherCountry : otherCountries) {
-                String otherCountryCode = otherCountry.getCode();
-                // Only add country codes not requested by the user
-                if (!countryCodes.contains(otherCountryCode))
-                    otherCountryCodes.add(otherCountryCode);
-            }
-            result.put(continentCode, otherCountriesResponse);
-        }
         // Just return the collection of OtherCountriesResponse objects
         // In this case the collection will be converted to JSON Array in the REST Controller
         return result.values();
