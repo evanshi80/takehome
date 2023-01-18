@@ -20,12 +20,18 @@ auth0:
 
 logging:
   level:
-    root: INFO
+    root: DEBUG
 
 rate:
   limit:
     unauthenticated: 5
     authenticated: 10
+
+nacos:
+  config:
+    server-addr: 127.0.0.1:8848
+    auto-refresh: true
+
 
 
 
